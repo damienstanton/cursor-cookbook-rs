@@ -18,20 +18,24 @@ async fn runs_stream_json_emits_expected_event_shape_and_resume_header() {
         .and(path("/v1/agents/bc-1/runs/run-1/stream"))
         .and(basic_auth("test-key", ""))
         .and(header("last-event-id", "evt-0"))
-        .respond_with(ResponseTemplate::new(200).insert_header("content-type", "text/event-stream").set_body_raw(
-            concat!(
-                "id: evt-1\n",
-                "event: assistant\n",
-                "data: {\"text\":\"hello\"}\n\n",
-                "id: evt-2\n",
-                "event: result\n",
-                "data: {\"runId\":\"run-1\",\"status\":\"FINISHED\"}\n\n",
-                "id: evt-3\n",
-                "event: done\n",
-                "data: {}\n\n"
-            ),
-            "text/event-stream",
-        ))
+        .respond_with(
+            ResponseTemplate::new(200)
+                .insert_header("content-type", "text/event-stream")
+                .set_body_raw(
+                    concat!(
+                        "id: evt-1\n",
+                        "event: assistant\n",
+                        "data: {\"text\":\"hello\"}\n\n",
+                        "id: evt-2\n",
+                        "event: result\n",
+                        "data: {\"runId\":\"run-1\",\"status\":\"FINISHED\"}\n\n",
+                        "id: evt-3\n",
+                        "event: done\n",
+                        "data: {}\n\n"
+                    ),
+                    "text/event-stream",
+                ),
+        )
         .mount(&server)
         .await;
 

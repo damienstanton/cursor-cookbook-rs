@@ -51,23 +51,27 @@ async fn stream_run_parses_sse_messages_and_ids() {
     let server = MockServer::start().await;
     Mock::given(method("GET"))
         .and(path("/v1/agents/bc-1/runs/run-1/stream"))
-        .respond_with(ResponseTemplate::new(200).insert_header("content-type", "text/event-stream").set_body_raw(
-            concat!(
-                "id: evt-1\n",
-                "event: status\n",
-                "data: {\"runId\":\"run-1\",\"status\":\"RUNNING\"}\n\n",
-                "id: evt-2\n",
-                "event: assistant\n",
-                "data: {\"text\":\"hello\"}\n\n",
-                "id: evt-3\n",
-                "event: result\n",
-                "data: {\"runId\":\"run-1\",\"status\":\"FINISHED\"}\n\n",
-                "id: evt-3\n",
-                "event: done\n",
-                "data: {}\n\n"
-            ),
-            "text/event-stream",
-        ))
+        .respond_with(
+            ResponseTemplate::new(200)
+                .insert_header("content-type", "text/event-stream")
+                .set_body_raw(
+                    concat!(
+                        "id: evt-1\n",
+                        "event: status\n",
+                        "data: {\"runId\":\"run-1\",\"status\":\"RUNNING\"}\n\n",
+                        "id: evt-2\n",
+                        "event: assistant\n",
+                        "data: {\"text\":\"hello\"}\n\n",
+                        "id: evt-3\n",
+                        "event: result\n",
+                        "data: {\"runId\":\"run-1\",\"status\":\"FINISHED\"}\n\n",
+                        "id: evt-3\n",
+                        "event: done\n",
+                        "data: {}\n\n"
+                    ),
+                    "text/event-stream",
+                ),
+        )
         .mount(&server)
         .await;
 

@@ -1,4 +1,4 @@
-use anyhow::{bail, Result};
+use anyhow::{Result, bail};
 use clap::{Args, Parser, Subcommand, ValueEnum};
 use cursor_sdk::{
     CreateAgentRequest, CreateRunRequest, CursorClient, ListAgentsParams, ListRunsParams,
@@ -10,7 +10,11 @@ use serde_json::json;
 use std::time::Duration;
 
 #[derive(Debug, Parser)]
-#[command(name = "cursor-cookbook", version, about = "Rust cookbook CLI for Cursor Cloud Agents")]
+#[command(
+    name = "cursor-cookbook",
+    version,
+    about = "Rust cookbook CLI for Cursor Cloud Agents"
+)]
 struct Cli {
     #[arg(long, env = "CURSOR_API_KEY")]
     api_key: Option<String>,
@@ -185,7 +189,11 @@ fn build_client(api_key: Option<String>) -> Result<CursorClient> {
     Ok(builder.build()?)
 }
 
-async fn quickstart(client: &CursorClient, output: OutputFormat, args: QuickstartArgs) -> Result<()> {
+async fn quickstart(
+    client: &CursorClient,
+    output: OutputFormat,
+    args: QuickstartArgs,
+) -> Result<()> {
     let response = client
         .create_agent(&CreateAgentRequest {
             prompt: Prompt {
@@ -205,11 +213,20 @@ async fn quickstart(client: &CursorClient, output: OutputFormat, args: Quickstar
         })
         .await?;
 
-    emit_run_created(output, &response.agent.id, &response.run.id, &response.agent.url)?;
+    emit_run_created(
+        output,
+        &response.agent.id,
+        &response.run.id,
+        &response.agent.url,
+    )?;
     stream_run(client, output, &response.agent.id, &response.run.id, None).await
 }
 
-async fn handle_agents(client: &CursorClient, output: OutputFormat, command: AgentsCommand) -> Result<()> {
+async fn handle_agents(
+    client: &CursorClient,
+    output: OutputFormat,
+    command: AgentsCommand,
+) -> Result<()> {
     match command {
         AgentsCommand::List {
             limit,
@@ -228,7 +245,10 @@ async fn handle_agents(client: &CursorClient, output: OutputFormat, command: Age
 
             emit_value(output, &response, || {
                 for agent in &response.items {
-                    println!("{}\t{}\t{}\t{}", agent.id, agent.status, agent.name, agent.url);
+                    println!(
+                        "{}\t{}\t{}\t{}",
+                        agent.id, agent.status, agent.name, agent.url
+                    );
                 }
 
                 if let Some(next_cursor) = &response.next_cursor {
@@ -246,30 +266,45 @@ async fn handle_agents(client: &CursorClient, output: OutputFormat, command: Age
         }
         AgentsCommand::Archive { agent_id } => {
             let response = client.archive_agent(&agent_id).await?;
-            emit_value(output, &json!({"agentId": agent_id, "archived": true, "response": response}), || {
-                println!("archived {agent_id}");
-                Ok(())
-            })?;
+            emit_value(
+                output,
+                &json!({"agentId": agent_id, "archived": true, "response": response}),
+                || {
+                    println!("archived {agent_id}");
+                    Ok(())
+                },
+            )?;
         }
         AgentsCommand::Unarchive { agent_id } => {
             let response = client.unarchive_agent(&agent_id).await?;
-            emit_value(output, &json!({"agentId": agent_id, "archived": false, "response": response}), || {
-                println!("unarchived {agent_id}");
-                Ok(())
-            })?;
+            emit_value(
+                output,
+                &json!({"agentId": agent_id, "archived": false, "response": response}),
+                || {
+                    println!("unarchived {agent_id}");
+                    Ok(())
+                },
+            )?;
         }
         AgentsCommand::Delete { agent_id } => {
             client.delete_agent(&agent_id).await?;
-            emit_value(output, &json!({"agentId": agent_id, "deleted": true}), || {
-                println!("deleted {agent_id}");
-                Ok(())
-            })?;
+            emit_value(
+                output,
+                &json!({"agentId": agent_id, "deleted": true}),
+                || {
+                    println!("deleted {agent_id}");
+                    Ok(())
+                },
+            )?;
         }
         AgentsCommand::Artifacts { agent_id } => {
             let artifacts = client.list_artifacts(&agent_id).await?;
             emit_value(output, &artifacts, || {
                 for artifact in &artifacts.items {
-                    println!("{}\t{}\t{}", artifact.path, artifact.size_bytes, artifact.updated_at);
+                    println!(
+                        "{}\t{}\t{}",
+                        artifact.path, artifact.size_bytes, artifact.updated_at
+                    );
                 }
                 Ok(())
             })?;
@@ -287,7 +322,11 @@ async fn handle_agents(client: &CursorClient, output: OutputFormat, command: Age
     Ok(())
 }
 
-async fn handle_runs(client: &CursorClient, output: OutputFormat, command: RunsCommand) -> Result<()> {
+async fn handle_runs(
+    client: &CursorClient,
+    output: OutputFormat,
+    command: RunsCommand,
+) -> Result<()> {
     match command {
         RunsCommand::List {
             agent_id,
@@ -375,10 +414,14 @@ async fn handle_runs(client: &CursorClient, output: OutputFormat, command: RunsC
         }
         RunsCommand::Cancel { agent_id, run_id } => {
             let response = client.cancel_run(&agent_id, &run_id).await?;
-            emit_value(output, &json!({"agentId": agent_id, "runId": run_id, "response": response}), || {
-                println!("cancel requested for {run_id}");
-                Ok(())
-            })?;
+            emit_value(
+                output,
+                &json!({"agentId": agent_id, "runId": run_id, "response": response}),
+                || {
+                    println!("cancel requested for {run_id}");
+                    Ok(())
+                },
+            )?;
         }
     }
 

@@ -247,11 +247,17 @@ mod tests {
     #[test]
     fn terminal_statuses_are_detected() {
         for status in ["FINISHED", "ERROR", "CANCELLED", "EXPIRED"] {
-            assert!(run_with_status(status).is_terminal(), "status {status} should be terminal");
+            assert!(
+                run_with_status(status).is_terminal(),
+                "status {status} should be terminal"
+            );
         }
 
         for status in ["CREATING", "RUNNING", "ACTIVE"] {
-            assert!(!run_with_status(status).is_terminal(), "status {status} should not be terminal");
+            assert!(
+                !run_with_status(status).is_terminal(),
+                "status {status} should not be terminal"
+            );
         }
     }
 }

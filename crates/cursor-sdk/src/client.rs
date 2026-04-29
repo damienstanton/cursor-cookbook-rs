@@ -289,24 +289,24 @@ impl CursorClient {
         while !run.is_terminal() {
             used_polling_fallback = true;
 
-            if let Some(timeout) = timeout {
-                if wait_started_at.elapsed() >= timeout {
-                    return Err(CursorError::WaitTimeout {
-                        agent_id: agent_id.to_owned(),
-                        run_id: run_id.to_owned(),
-                        timeout_ms: timeout.as_millis(),
-                    });
-                }
+            if let Some(timeout) = timeout
+                && wait_started_at.elapsed() >= timeout
+            {
+                return Err(CursorError::WaitTimeout {
+                    agent_id: agent_id.to_owned(),
+                    run_id: run_id.to_owned(),
+                    timeout_ms: timeout.as_millis(),
+                });
             }
 
-            if let Some(max_poll_attempts) = max_poll_attempts {
-                if poll_attempts >= max_poll_attempts {
-                    return Err(CursorError::MaxPollAttemptsExceeded {
-                        agent_id: agent_id.to_owned(),
-                        run_id: run_id.to_owned(),
-                        max_attempts: max_poll_attempts,
-                    });
-                }
+            if let Some(max_poll_attempts) = max_poll_attempts
+                && poll_attempts >= max_poll_attempts
+            {
+                return Err(CursorError::MaxPollAttemptsExceeded {
+                    agent_id: agent_id.to_owned(),
+                    run_id: run_id.to_owned(),
+                    max_attempts: max_poll_attempts,
+                });
             }
 
             tokio::time::sleep(poll_interval).await;

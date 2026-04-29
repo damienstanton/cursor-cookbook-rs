@@ -1,6 +1,8 @@
 use futures_util::StreamExt;
 
-use cursor_sdk::{CreateAgentRequest, CursorClient, ModelSelection, Prompt, RepositoryRef, RunStreamEvent};
+use cursor_sdk::{
+    CreateAgentRequest, CursorClient, ModelSelection, Prompt, RepositoryRef, RunStreamEvent,
+};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
