@@ -1,5 +1,9 @@
 # cursor-cookbook
 
+[![CI](https://github.com/damienstanton/cursor-cookbook-rs/actions/workflows/ci.yml/badge.svg)](https://github.com/damienstanton/cursor-cookbook-rs/actions/workflows/ci.yml)
+[![crates.io](https://img.shields.io/crates/v/cursor-sdk.svg)](https://crates.io/crates/cursor-sdk)
+[![docs.rs](https://docs.rs/cursor-sdk/badge.svg)](https://docs.rs/cursor-sdk)
+
 An idiomatic Rust 2024 workspace inspired by [cursor/cookbook](https://github.com/cursor/cookbook).
 
 This repo mirrors the upstream split between a reusable SDK surface and small runnable examples:

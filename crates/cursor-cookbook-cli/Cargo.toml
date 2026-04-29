@@ -2,6 +2,10 @@
 name = "cursor-cookbook-cli"
 version.workspace = true
 edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "CLI demo for the cursor-sdk Cloud Agents cookbook"
+publish = false
 
 [dependencies]
 anyhow.workspace = true
