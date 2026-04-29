@@ -4,6 +4,7 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 repository.workspace = true
+authors = ["Damien Stanton <damien.stanton@gmail.com>"]
 description = "Async Rust client for Cursor's Cloud Agents API"
 keywords = ["cursor", "ai", "agents", "llm", "async"]
 categories = ["api-bindings", "asynchronous", "web-programming::http-client"]
